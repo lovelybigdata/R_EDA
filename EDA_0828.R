@@ -566,102 +566,100 @@ star_03_order_main$order_date <- as.Date(star_03_order_main$order_date )
 # 以星期做集群  -- 要再順一下
 star_03_order_main %>%  group_by( weekdays(order_date)) %>% summarise( day_count = n() %>% arrange( - day_count)  
                                                                        
-                                                                       # 以月份做集群  
+                                                                # 以月份做集群  
                                                                        star_03_order_main %>%  group_by( months(order_date)) %>% summarise( day_count = n()) %>% arrange( - day_count) 
                                                                        
-                                                                       # 以月份+星期做集群 (此時中間要夾個 ungroup)
+                                                                # 以月份+星期做集群 (此時中間要夾個 ungroup)
                                                                        star_03_order_main %>%  group_by( months(order_date) ,weekdays(order_date) ) %>% summarise( day_count = n()) %>% ungroup %>% arrange( - day_count) 
                                                                        
-                                                                       #star_03_order_main %>%  group_by( months(order_date) ,weekdays(order_date) ) %>% summarise( day_count = n())   %>% arrange( - day_count) 
+                                                                #star_03_order_main %>%  group_by( months(order_date) ,weekdays(order_date) ) %>% summarise( day_count = n())   %>% arrange( - day_count) 
                                                                        
                                                                        
-                                                                       # 星期的效應比月份的效應強
+                                                                # 星期的效應比月份的效應強
                                                                        
                                                                        
                                                                        
                                                                        
                                                                        
-                                                                       # 連結 JOIN
-                                                                       # 左連結範例1
-                                                        star_join_1 <- 
-                                                        left_join( star_03_order_main , star_02_store ,
+                                                                # 連結 JOIN
+                                                                # 左連結範例1
+star_join_1 <-                                          left_join( star_03_order_main , star_02_store ,
            by = "store_id")  
                                                                        
-                                                                       # 左連結範例2
-                                                                       star_join_2 <- left_join( star_03_order_main , star_04_order_detail , by = "order_id")  %>% left_join( . , star_01_menu , by = "product_id")
+                                                 # 左連結範例2
+                                                        star_join_2 <- 
+                                                          left_join( star_03_order_main , star_04_order_detail , by = "order_id")  %>% left_join(   star_01_menu , by = "product_id")
+                                                 # 傳統寫法
+                                                        star_join_2_old <-                                      left_join(left_join( star_03_order_main , star_04_order_detail , by = "order_id"),star_01_menu, by = "product_id")
                                                                        
-                                                                       
-                                                                       # test code for ppt   
+                                                                # test code for ppt   
                                                                        star_join_3 <- 
-                                                                         left_join(star_03_order_main,star_04_order_detail,by="order_id") %>%
-                                                                         left_join(star_01_menu,by="product_id") %>% 
-                                                                         left_join(star_02_store,by ="store_id")  
+                                                                left_join(star_03_order_main,star_04_order_detail,by="order_id") %>% left_join(star_01_menu,by="product_id") %>% left_join(star_02_store,by ="store_id")  
                                                                        
-                                                                       # 左連結範例3
+                                                                # 左連結範例3
                                                                        star_join_3 <- left_join( star_03_order_main , star_04_order_detail , by = "order_id")  %>% left_join( . , star_01_menu , by = "product_id") %>% left_join(., star_02_store , by = "store_id") 
                                                                        
-                                                                       star_join_3
+star_join_3_old <-                                      left_join(left_join(left_join( star_03_order_main , star_04_order_detail , by = "order_id"),star_01_menu, by = "product_id") , star_02_store , by = "store_id")                                                                
                                                                        
                                                                        
-                                                                       
-                                                                       # 不同品項購買的杯量會不同嗎?
+                                                                # 不同品項購買的杯量會不同嗎?
                                                                        star_join_3 %>% group_by( cup_size) %>% summarise( n())
                                                                        
-                                                                       # cup_size   n()
-                                                                       # (chr) (int)
-                                                                       # 1     中杯 48882
-                                                                       # 2     大杯 29660
-                                                                       # 3   特大杯 18684
-                                                                       # 4     小杯  2773
+                                                                # cup_size   n()
+                                                                # (chr) (int)
+                                                                # 1     中杯 48882
+                                                                # 2     大杯 29660
+                                                                # 3   特大杯 18684
+                                                                # 4     小杯  2773
                                                                        
-                                                                       # 中杯的品項都是些什麼呢?
-                                                                       # 咖啡?
-                                                                       # 星冰樂?
-                                                                       # 摩卡?
+                                                                # 中杯的品項都是些什麼呢?
+                                                                # 咖啡?
+                                                                # 星冰樂?
+                                                                # 摩卡?
                                                                        star_join_3 %>% filter( cup_size == "中杯" & product %like% "咖啡")   %>% nrow
                                                                        star_join_3 %>% filter( cup_size == "中杯" & product %like% "星冰樂")   %>% nrow
                                                                        star_join_3 %>% filter( cup_size == "中杯" & product %like% "摩卡")    %>% nrow
-                                                                       # 你的答案是
+                                                                # 你的答案是
                                                                        
-                                                                       # 營業總額是多少呢
+                                                                # 營業總額是多少呢
                                                                        star_join_3 %>% summarise( sum(price* sale_n))
                                                                        
-                                                                       # 那一種產品最受歡迎，賣出數量?總銷售額?
-                                                                       # 看法1:數量
+                                                                # 那一種產品最受歡迎，賣出數量?總銷售額?
+                                                                # 看法1:數量
                                                                        star_join_3 %>% group_by( product) %>%  summarise( revenue =  sum(price* sale_n),  my_count=n())%>% arrange(-revenue)
-                                                                       # 看法2:銷售量
+                                                                # 看法2:銷售量
                                                                        star_join_3 %>% group_by( product) %>%  summarise( revenue =  sum(price* sale_n),  my_count=n())%>% arrange(-my_count )
                                                                        
-                                                                       ###
-                                                                       # 週報示範
+                                                                ###
+                                                                # 週報示範
                                                                        
                                                                        today()
                                                                        
-                                                                       # 你們公司如何定義一週呢?
-                                                                       # 先來示範最簡單的狀況
-                                                                       # 星期日 ~ 星期六  
-                                                                       # 小型電商? (七天)
-                                                                       # 星期四 ~ 星期五
+                                                                # 你們公司如何定義一週呢?
+                                                                # 先來示範最簡單的狀況
+                                                                # 星期日 ~ 星期六  
+                                                                # 小型電商? (七天)
+                                                                # 星期四 ~ 星期五
                                                                        
-                                                                       # 今天
+                                                                # 今天
                                                                        today()
-                                                                       # 明天
+                                                                # 明天
                                                                        today()+1
-                                                                       # 後天
+                                                                # 後天
                                                                        today()+2
                                                                        
-                                                                       # 昨天
+                                                                # 昨天
                                                                        today()-1
-                                                                       # 前天
+                                                                # 前天
                                                                        today()-2
                                                                        
                                                                        
-                                                                       # ymd("2016-09-04") %>% wday()
-                                                                       # [1] 1
-                                                                       # ymd("2016-09-05") %>% wday()
-                                                                       # [1] 2
-                                                                       # ymd("2016-09-06") %>% wday()
-                                                                       # [1] 3
+                                                                # ymd("2016-09-04") %>% wday()
+                                                                # [1] 1
+                                                                # ymd("2016-09-05") %>% wday()
+                                                                # [1] 2
+                                                                # ymd("2016-09-06") %>% wday()
+                                                                # [1] 3
                                                                        
                                                                        
                                                                        this_week = today() - wday( today()) + 1  -2
