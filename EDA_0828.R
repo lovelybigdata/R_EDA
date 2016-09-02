@@ -89,7 +89,7 @@ install.packages("cowsay")
 # 以下套件電腦教室已安裝完成
 # 學員課後使用自己筆電時，把註解去除即可安裝
 # 以下套件因為安裝時需時較久，所以事先請助教協助安裝完成
-#install.packages("data.table)  #套件用途 ETL & 快速讀取
+#install.packages("data.table")  #套件用途 ETL & 快速讀取
 #install.packages("dplyr") #套件用途 ETL
 #install.packages("readxl")     #套件用途 讀取EXCEL格式
 #install.packages("openxlsx")   #套件用途 輸出EXCCL格式
